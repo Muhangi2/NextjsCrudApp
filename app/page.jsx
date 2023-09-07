@@ -1,3 +1,4 @@
+import Feeds from "@components/Feeds";
 import React from "react";
 
 function HomePage() {
@@ -11,6 +12,7 @@ function HomePage() {
       <p className="desc text-center">
         Lets promote Ai using open source contribution
       </p>
+      <Feeds />
     </section>
   );
 }
