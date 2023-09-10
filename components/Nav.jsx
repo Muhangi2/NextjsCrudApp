@@ -4,19 +4,20 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { SignIn, SignOut, useSession, getProviders } from "next-auth/react";
+import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 
 const Nav = () => {
   const [providers, setproviders] = useState(null);
   const [toggle, settoggle] = useState(true);
-  const usersigned = true;
+  const { data: session } = useSession;
+  console.log(session?.user);
 
   useEffect(() => {
-    const setproviders = async () => {
+    const setpuproviders = async () => {
       const response = await getProviders();
       setproviders(response);
     };
-    setproviders();
+    setpuproviders();
   }, []);
   return (
     <nav className="flex-between bg-red-800 w-full mb-16 pt-3">
@@ -31,12 +32,12 @@ const Nav = () => {
       </Link>
       {/* desktop navigation */}
       <div className="sm:flex hidden">
-        {usersigned ? (
+        {session?.user ? (
           <div className="flex gap-3 md:gap-5">
             <Link href="/create-prompt" className="black_btn">
               Create Post
             </Link>
-            <button onClick={SignOut} type="button" className="outline_btn">
+            <button onClick={signOut} type="button" className="outline_btn">
               SignOut
             </button>
             <Link href="/profile">
@@ -56,14 +57,16 @@ const Nav = () => {
                   type="button"
                   key={provider.name}
                   className="black_btn"
-                  onClick={() => SignIn(provider.id)}></button>
+                  onClick={() => signIn(provider?.id)}>
+                  SignIn
+                </button>
               ))}
           </>
         )}
       </div>
       {/* mobile navigation */}
       <div className="sm:hidden flex-relative">
-        {usersigned ? (
+        {session?.user ? (
           <div className="flex">
             <Image
               alt="profile"
@@ -93,7 +96,7 @@ const Nav = () => {
                   type="button"
                   onClick={() => {
                     settoggle(false);
-                    SignOut();
+                    signOut();
                   }}
                   className="mt-5 w-full black_btn">
                   SignOut
@@ -109,7 +112,9 @@ const Nav = () => {
                   type="button"
                   key={provider.name}
                   className="black_btn"
-                  onClick={() => SignIn(provider.id)}></button>
+                  onClick={() => signIn(provider?.id)}>
+                  SignIn
+                </button>
               ))}
           </>
         )}
